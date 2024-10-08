@@ -5,11 +5,22 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks; // Add for Task usage
 using System.Windows.Forms;
+using EasyTabs;
 
 namespace GNix
 {
     public partial class Form1 : Form
     {
+       
+        protected TitleBarTabs ParentTabs
+        {
+            get
+            {
+                return (ParentForm as TitleBarTabs);
+            }
+        }
+
+
         public Form1()
         {
             InitializeComponent();
@@ -20,7 +31,7 @@ namespace GNix
             webView21.NavigationStarting += webView21_Validatings;
             webView21.NavigationCompleted += webView21_Validateds;
             webView21.NavigationCompleted += webView21_NavigationCompleted; // Added for history checking
-            this.FormClosing += Form1_FormClosing;
+       
 
         }
 
@@ -28,8 +39,11 @@ namespace GNix
         {
             // Ensure that WebView2 is initialized
             await webView21.EnsureCoreWebView2Async(null);
-            webView21.Source = new Uri("https://google.com/"); // Load Google at startup
-        }
+
+            webView21.Source = new Uri("https://google.com");
+        
+
+    }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -78,26 +92,15 @@ namespace GNix
             }
 
             textBox1.Text = e.Uri;
+            this.Text = e.Uri;
+
         }
 
         private void webView21_Validateds(object sender, EventArgs e)
         {
             loading.Image = Properties.Resources.google; // Show loaded image
         }
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Show a confirmation dialog
-            var result = MessageBox.Show("Are you sure you want to close this application?",
-                                          "Confirm to Close",
-                                          MessageBoxButtons.YesNo,
-                                          MessageBoxIcon.Question);
-
-            // If the result is No, cancel the closing event
-            if (result == DialogResult.No)
-            {
-                e.Cancel = true;
-            }
-        }
+       
         private async void button4_Click(object sender, EventArgs e)
         {
             string input = textBox1.Text.Trim();
@@ -176,6 +179,11 @@ namespace GNix
         private void button6_Click(object sender, EventArgs e)
         {
             webView21.Source = new Uri("https://google.com/");
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
